@@ -1,7 +1,5 @@
-/* Global Variables */
+/* Personal API key for OpenWeatherMap API*/
 const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
-
-/* API key*/
 const apiKey = '&units=imperial&appid=58163d165072b2e4eb461b90e9804a23';
 
 // New date stored in a variable to be displayed
@@ -11,7 +9,7 @@ let dateToday =  d.getMonth() + '/' + d.getDay() + '/' + d.getFullYear();
 // Event listener for the click
 document.getElementById('generate').addEventListener('click', getWeather);
 
-// Function that fires off when the click has been registered
+// Function that will gather information and execute it once click has been used.
 function getWeather(e) {
     e.preventDefault();
     const zipCode = document.getElementById('zip-input').value;
@@ -64,18 +62,16 @@ async function postData(url, data) {
         body: JSON.stringify(data),
     });
 }
-
+// GET function that gets the information from the server
 async function updateUI() {
-    // GET function that takes the info from the server
     const response = await fetch('/retrieve');
     const lastEntry = await response.json();
-    document.querySelector('.city').innerText = "Weather in " + lastEntry.city;
-    document.querySelector('.country').innerText = lastEntry.country;
+    document.querySelector('.city').innerText = "Weather in " + lastEntry.city + ", " + lastEntry.country;
     document.querySelector('.temperature').innerText = Math.floor(lastEntry.temperature) + "°F";
     document.querySelector('.description').innerText = lastEntry.description;
+    document.querySelector('.date').innerText = dateToday;
     document.querySelector('.humidity').innerText = "Humidity: " + lastEntry.humidity + "%";
     document.querySelector('.wind').innerText = "Wind Speed: " + lastEntry.windSpeed + " " + "mph";
     document.querySelector('.icon').src = "https://openweathermap.org/img/wn/" + lastEntry.icon +"@2x.png";
-    document.querySelector('.date').innerText = "Date: " + dateToday;
     document.querySelector('.content').innerText = lastEntry.feeling;
 }
