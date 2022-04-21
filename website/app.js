@@ -2,63 +2,61 @@
 const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
 
 /* API key*/
-const apiKey = '58163d165072b2e4eb461b90e9804a23';
+const apiKey = '&units=imperial&appid=58163d165072b2e4eb461b90e9804a23';
 
-// Create a new date instance dynamically with JS
-let d = newFunction();
-let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+// New date stored in a variable to be displayed
+let d = new Date()
+let dateToday =  d.getMonth() + '/' + d.getDay() + '/' + d.getFullYear();
 
+// Event listener for the click
 document.getElementById('generate').addEventListener('click', getWeather);
 
-function newFunction() {
-    return new Date();
-}
-
-function getWeather(e){
+// Function that fires off when the click has been registered
+function getWeather(e) {
     e.preventDefault();
     const zipCode = document.getElementById('zip-input').value;
     const userFeeling = document.getElementById('user-feeling').value;
     getWeatherInfo(baseURL, zipCode, apiKey)
-    .then(function(weatherData){
+    .then(function (weatherData) {
         const temperature = weatherData.main.temp;
         const city = weatherData.name;
         const description = weatherData.weather[0].description;
         const icon = weatherData.weather[0].icon;
-        const windSpeed = weatherData.windSpeed;
+        const windSpeed = weatherData.wind.speed;
         const humidity = weatherData.main.humidity;
         const feeling = userFeeling;
         const country = weatherData.sys.country;
-
-        //server posting
+        // Weather info posted to the server
         postData('/add', {
-            temperature,
+            temperature, 
             city,
-            description,
-            icon,
+            description, 
+            icon, 
             windSpeed,
             humidity,
             feeling,
             country
         }).then(() => {updateUI();})
-        //funticon to be called after click is fire off and weather info is gathered
+        // updateUI function to be called after the click is fired off and the weather info is gathered
     });
 }
 
-//take the info and call shte API for data
-const getWeatherInfo = async (baseURL, zipCode, apiKey) =>{
-    console.log(baseURL + zipCode + ',us&appid=' + apiKey);
-    const response = await fetch(baseURL + zipCode + ',us&appid=' + apiKey)
-    try{
+// Takes the url + zip + API and calls the API for the data
+const getWeatherInfo = async (baseURL, zipCode, apiKey) => {
+
+    const response = await fetch(baseURL + zipCode + apiKey)
+    try {
         const newData = await response.json();
+        console.log(newData)
         return newData;
-    }
-    catch(error){
+    } 
+    catch(error) {
         console.log("error", error);
     }
 };
 
-//Post
-async function postData(url, data){
+// POST function to server
+async function postData(url, data) {
     await fetch(url, {
         method: 'POST',
         credentials: 'same-origin',
@@ -67,17 +65,17 @@ async function postData(url, data){
     });
 }
 
-// get fuction that takes info to server
-async function updateUI(){
+async function updateUI() {
+    // GET function that takes the info from the server
     const response = await fetch('/retrieve');
     const lastEntry = await response.json();
     document.querySelector('.city').innerText = "Weather in " + lastEntry.city;
     document.querySelector('.country').innerText = lastEntry.country;
-    document.querySelector('.temperature').innerText = Math.floor(lastEntry.temperature) + `&deg;`;
+    document.querySelector('.temperature').innerText = Math.floor(lastEntry.temperature) + "°F";
     document.querySelector('.description').innerText = lastEntry.description;
     document.querySelector('.humidity').innerText = "Humidity: " + lastEntry.humidity + "%";
-    document.querySelector('.wind').innerText = "Wind speed " + lastEntry.windSpeed + "km/H";
-    document.querySelector('.icon').src = "https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png" + lastEntry.icon +"@2x.png";
-    document.querySelector('.date').innerText = dateToday;
+    document.querySelector('.wind').innerText = "Wind Speed: " + lastEntry.windSpeed + " " + "mph";
+    document.querySelector('.icon').src = "https://openweathermap.org/img/wn/" + lastEntry.icon +"@2x.png";
+    document.querySelector('.date').innerText = "Date: " + dateToday;
     document.querySelector('.content').innerText = lastEntry.feeling;
 }
