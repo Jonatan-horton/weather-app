@@ -1,6 +1,20 @@
 # weather-app
- Webapplication Udacity
+ # Webapplication Project for Front-End Web Developer nano-degree
 
- This project is a Web application
+## Technologies
+Project is created with:
+ * Javascript
+ * HTML
+ * CSS
+ * API from OpenWeatherMap.org
 
- API used: Openweathermap.org
+ ## Setup
+ To Run this project, install it locally using npm:
+ ```
+ $ cd../website
+ $ npm install
+ $ npm start
+ ```
+
+
+
