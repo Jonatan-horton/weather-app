@@ -9,11 +9,10 @@ Project is created with:
  * API from OpenWeatherMap.org
 
  ## Setup
- To Run this project, install it locally using npm:
+ To Run this project, install dependencies from npm and run with node:
  ```
- $ cd../website
  $ npm install
- $ npm start
+ $ node server.js
  ```
 
 
